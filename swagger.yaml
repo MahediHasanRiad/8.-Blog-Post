@@ -1,0 +1,1451 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: 'my daily blog'
+  description: 'this is a professional blog website. its simple blog website where you can create an article, login to there system and create articles that will be visible publicly'
+  contact: 
+    name: 'riad'
+    url: http://riad.com
+    email: contact.mahedihasan@gmail.com
+servers: 
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/self-175/daily-blog/1.0.0
+  - description: Dev
+    url: 'http://localhost:3000/api/v1'
+tags: 
+  - name: Auth
+    description: Authentication Endpoints (public)
+  - name: Article
+    description: Article Endpoints ( public + privet )
+  - name: Comments
+    description: comments Endpoints ( public )
+  - name: User
+    description: User Endpoints ( admin only )
+paths:
+  '/user':
+    post:
+      security: 
+        - bearerAuth: []
+      tags: [User]
+      description: create a new User
+      requestBody: 
+        description: provide a valid properties 
+        content: 
+          'application/json':
+            schema: 
+              type: object
+              properties: 
+                name:
+                  type: string
+                  example: riad 
+                email: 
+                  type: string
+                  format: email
+                  example: riad@gmail.com
+                mobile:
+                  type: number
+                  format: int32
+                  example: 01518949131
+                password:
+                  type: string
+                  format: password
+                  example: riad123 
+                roll:
+                  type: string
+                  enum: [user, admin]
+                  example: User 
+              required: [name, email, mobile, password, roll]
+      responses: 
+        '200':
+          description: successful
+          content: 
+            'application/json':
+              schema:
+                type: object
+                properties: 
+                  code:
+                    type: number
+                    format: int32
+                    example: 1
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    $ref: '#/components/schemas/user-data'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users/{id}':
+    get: 
+      security: 
+        - bearerAuth: []
+      description: find a single user 
+      tags: [User]
+      parameters:
+        - in: path
+          name: id 
+          description: find a user
+          required: true
+          schema: 
+            type: integer
+            format: int32
+            example: 1
+      responses: 
+        '200':
+          description: success
+          content: 
+            'application/json':
+              schema:
+                type: object
+                properties: 
+                  code: 
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: success 
+                  user-data:
+                    $ref: '#/components/schemas/user-data'
+                  links:
+                    type: object
+                    properties:
+                      self: 
+                        type: string
+                        format: url
+                        example: 'https://cloudinary.com/125ad2f5df'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'   
+    put: 
+      security: 
+        - bearerAuth: []
+      tags: [User]
+      description: update user or create one 
+      parameters:
+        - $ref: '#/components/parameters/idPathParams'
+      requestBody:
+        description: provide update field or create 
+        content:
+          'application/json':
+            schema: 
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: riad 
+                email: 
+                  type: string
+                  format: email
+                  example: riad@gmail.com
+                mobile:
+                  type: number
+                  format: int32
+                  example: 01518949131
+                password:
+                  type: string
+                  format: password
+                  example: riad123 
+                role:
+                  type: string
+                  enum: [user, admin]
+                  example: User 
+                status:
+                  type: string
+                  enum: [draft, published]
+                  example: Draft
+              required: [name, email, mobile, password, role]
+      responses:
+        '200':
+          description: success
+          content: &update-user-data
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: success 
+                  user-data:
+                    $ref: '#/components/schemas/user-data'
+                  link:
+                    type: string
+                    format: url 
+                    example: 'user/1'
+        '201':
+          description: create one 
+          content: *update-user-data
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+
+    patch: 
+      security: 
+        - bearerAuth: []
+      tags: [User]
+      description: update user
+      parameters:
+        - $ref: '#/components/parameters/idPathParams'
+      requestBody:
+        description: provide update field
+        content:
+          'application/json':
+            schema: 
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: riad 
+                email: 
+                  type: string
+                  format: email
+                  example: riad@gmail.com
+                mobile:
+                  type: number
+                  format: int32
+                  example: 01518949131
+                password:
+                  type: string
+                  format: password
+                  example: riad123 
+                role:
+                  type: string
+                  enum: [user, admin]
+                  example: User 
+                status:
+                  type: string
+                  enum: [draft, published]
+                  example: Draft
+      responses:
+        '200':
+          description: success
+          content: &update-user-data
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: success 
+                  user-data:
+                    $ref: '#/components/schemas/user-data'
+                  link:
+                    type: string
+                    format: url 
+                    example: 'user/1'
+        '201':
+          description: create one 
+          content: *update-user-data
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete: 
+      security: 
+        - bearerAuth: []
+      tags: [User]
+      description: delete a user 
+      parameters: 
+        - $ref: '#/components/parameters/idPathParams'
+      
+      responses:
+        '200':
+          description: success 
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  id: 
+                    type: number 
+                    format: int32
+                    example: 1
+                  name:
+                    type: string
+                    example: riad 
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users':
+    get: 
+      security: 
+        - bearerAuth: []
+      tags: [User]
+      description: Get all users
+      parameters:
+        - $ref: '#/components/parameters/pageParams'
+        - $ref: '#/components/parameters/limitParams'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      
+      responses:
+        '200':
+          description: successful
+          content: 
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: success 
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          format: int32
+                          example: 1
+                        name:
+                          type: string
+                          example: Riad
+                        role:
+                          type: string
+                          enum: [user, admin]
+                          example: User 
+                        link:
+                          type: string 
+                          format: url
+                          example: /user/6
+                        pagination:
+                          $ref: '#/components/schemas/pagination'
+                        links:
+                          type: object
+                          properties: 
+                            self:
+                              type: string
+                              format: url
+                              example: /user/5
+                            next:
+                              type: string
+                              format: url
+                              example: /user/55
+                            prev:
+                              type: string
+                              format: url
+                              example: /user/54
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'                
+  '/user/{id}/password':
+    post: 
+      security: 
+        - bearerAuth: []
+      tags: [User]
+      description: change password
+      parameters:
+        - $ref: '#/components/parameters/idPathParams'
+      requestBody:
+        description: provide valid old password and provide new password
+        content:
+          'application/json':
+            schema: 
+              type: object
+              properties:
+                old-password: 
+                  type: string
+                  example: riad123 
+                new-password:
+                  type: string
+                  example: riad@@
+      responses:
+        '200':
+          description: success 
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: successfully updated 
+                  old-password: 
+                    type: string
+                    example: riad123
+                  new-password:
+                    type: string
+                    example: riad@@
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/auth/signup':
+    post: 
+      description: create a new account 
+      tags: [Auth]
+      requestBody: 
+        content: 
+          'application/json':
+            schema: 
+              type: object
+              properties: 
+                name:
+                  type: string
+                  example: mahedi hasan
+                email:
+                  type: string
+                  format: email
+                  example: abc@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: pass123
+              required: [name, email, password]
+      responses: 
+        '201':
+          description: signup successful
+          content: 
+            'application/json':
+              schema: 
+                type: object
+                properties: 
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Signup successful
+                  data:
+                    type: object
+                    properties: 
+                      access_Token:
+                        type: string
+                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30'
+                  links:
+                    type: object
+                    properties: 
+                      self:
+                        type: string
+                        example: '/auth/signup'
+                      signin:
+                        type: string
+                        example: '/auth/signin'
+        '400':
+          $ref: '#/components/responses/400'
+  '/autho/signin':
+    post:
+      description: sign-in profile
+      tags: [Auth] 
+      requestBody: 
+        content: 
+          'application/json':
+            schema: 
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+                  example: riad 
+                password:
+                  type: string
+                  format: password
+                  example: riad123
+              required: [email, password]
+      responses:
+        '200':
+          description: sign-in successful
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: sign-in successfully
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Riad
+                        email:
+                          type: string
+                          format: email
+                          example: riad@gmail.com 
+                        mobile:
+                          type: number
+                          example: 01518949131
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string 
+                        example: /auth/signIn
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  '/articles':
+    get: 
+      tags: [Article]
+      description: Get All Article List
+      parameters: 
+        - $ref: '#/components/parameters/pageParams'
+        - $ref: '#/components/parameters/limitParams'
+        - $ref: '#/components/parameters/sortTypeParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          description: return all article base on query 
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties: 
+                  code: 
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items: 
+                      allOf: 
+                        - type: object
+                          properties: 
+                            title:
+                              type: string
+                              example: about chittagong tour
+                            coverImage:
+                              type: string
+                              example: 'https://cloudinary.img.com/15262'
+                            author:
+                              $ref: '#/components/schemas/authorDTO'
+                            links:
+                              type: string
+                              format: url
+                              example: 'https://www.article.com/articles'
+                          required: [title, author]
+                        - $ref: '#/components/schemas/timeStamp'  
+                  pagination:
+                    $ref: '#/components/schemas/pagination'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: '/article/1?query=10'
+                      next_page:
+                        type: string
+                        format: url
+                        example: '/article/3'
+                      prev_page: 
+                        type: string
+                        format: url
+                        example: '/article/1'
+                      author:
+                        type: string
+                        format: url
+                        example: 'riad'
+                      comments:
+                        type: string
+                        format: url
+                        example: '/article/comments'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  '/article':
+    post: 
+      security: 
+        - bearerAuth: []
+      tags: [Article]
+      description: create an article, must provide a valid data
+      requestBody:
+        description: create article 
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: first Article
+                body:
+                  type: string
+                  format: text
+                  example: article body 
+                coverImage:
+                  type: string
+                  format: url
+                  example: 'https://cloudinary.com/15362adged265'
+                status:
+                  type: string
+                  enum: [draft, Published]
+                  example: draft
+              required: [title, body] 
+      responses: 
+        '200':
+          description: successfully created
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties: 
+                  code:
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: successfully created
+                  article_data:
+                    type: object
+                    properties: 
+                      data:
+                        $ref: '#/components/schemas/article'
+                  links:
+                    type: object
+                    properties: 
+                      self:
+                        type: string
+                        format: url
+                        example: '/article/3'
+                      author:
+                        type: string
+                        format: url
+                        example: '/article/author'
+                      comments:
+                        type: string
+                        format: url
+                        example: '/article/comments'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':               
+          $ref: '#/components/responses/500'
+  '/articles/{id}':
+    get: 
+      security: 
+        - bearerAuth: []
+      description: find an article 
+      tags: [Article]
+      parameters:
+        - in: path
+          name: id 
+          required: true
+          description: request id 
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - in: query
+          name: expand 
+          description: expend author and comments 
+          schema:
+            type: string
+            example: 'author, comments'
+      responses: 
+        '200':
+          description: success 
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/article'
+                      - type: object
+                        properties: 
+                          author:
+                            $ref: '#/components/schemas/authorDTO'
+                      - type: object
+                        properties: 
+                          comments:
+                            $ref: '#/components/schemas/comments'
+                  links:
+                    type: object
+                    properties: 
+                      self:
+                        type: string
+                        format: url 
+                        example: /article/1
+                      author:
+                        type: string
+                        format: url 
+                        example: /article/author/5
+                      comments:
+                        type: string
+                        format: url
+                        example: /article/comments  
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security: 
+        - bearerAuth: []
+      description: update an article or Create new one 
+      tags: [Article]
+      parameters:
+        - $ref: '#/components/parameters/idPathParams'
+      requestBody:
+        description:  provide valid article data for update or create 
+        content:
+          'application/json':
+            schema: 
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: chittagong tour 
+                body:
+                  type: string
+                  example: chittagong tour describe 
+                cover-image:
+                  type: string
+                  format: url
+                  example: 'https://cloudinary.com/adrf15d2s6adf5'
+                status:
+                  type: string
+                  enum: [draft, published]
+                  example: Draft
+                links:
+                  type: string
+                  format: url
+                  example: 'https://article.com/21' 
+              required: [title, body]
+      responses: 
+        '200':
+          description: successful
+          content: &article_update_content
+           'application/json':
+            schema: 
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: chittagong tour 
+                body:
+                  type: string
+                  example: chittagong tour describe 
+                cover-image:
+                  type: string
+                  format: url
+                  example: 'https://cloudinary.com/adrf15d2s6adf5'
+                status:
+                  type: string
+                  enum: [draft, published]
+                  example: Draft
+                links:
+                  type: string
+                  format: url
+                  example: 'https://article.com/21' 
+        '201':
+          description: successfully updated or created 
+          content: *article_update_content
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      security: 
+        - bearerAuth: []
+      tags: [Article]  
+      description: update an article 
+      parameters:
+        - $ref: '#/components/parameters/idPathParams'
+      requestBody: 
+        description:  update article 
+        content:
+          'application/json':
+            schema: 
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: chittagong tour 
+                body:
+                  type: string
+                  example: chittagong tour describe 
+                cover-image:
+                  type: string
+                  format: url
+                  example: 'https://cloudinary.com/adrf15d2s6adf5'
+                status:
+                  type: string
+                  enum: [draft, published]
+                  example: Draft
+      responses: 
+        '200':
+          description: success 
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32
+                    example: 1
+                  message:
+                    type: string
+                    example: success 
+                  article-date:
+                    type: object
+                    properties:
+                      id: 
+                        type: number
+                        format: int32
+                        example: 1
+                      title:
+                        type: string
+                        example: 'chittagong tour'
+                      body:
+                        type: string
+                        example: chittagong tour body 
+                      status:
+                        type: string
+                        enum: [Draft, Published]
+                        example: Draft 
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string 
+                            format: url 
+                            example: 'https://cloudinary.com/15ad2f6'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      security: 
+        - bearerAuth: []
+      description: Delete any article
+      tags: [Article]  
+      parameters:
+        - $ref: '#/components/parameters/idPathParams'
+      responses:
+        '204':
+          description: delete single article 
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties: 
+                  code: 
+                    type: number
+                    format: int32
+                    example: 204
+                  message:
+                    type: string
+                    example: successfully deleted 
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'            
+  '/article/{id}/comments':
+    get:
+      security: 
+        - bearerAuth: []
+      description: get all comments from an article 
+      tags: [Article]
+      parameters:
+        - $ref: '#/components/parameters/idPathParams'
+        - $ref: '#/components/parameters/pageParams'
+        - $ref: '#/components/parameters/limitParams'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32 
+                    example: 200
+                  message:
+                    type: string
+                    example: success
+                  article-comments:
+                    type: object
+                    properties: 
+                      id:
+                        type: number
+                        format: int32
+                        example: 1
+                      body:
+                        type: string
+                        example: this is good
+                      author:
+                        type: object
+                        properties: 
+                          id:
+                            type: number
+                            format: int32
+                            example: 1
+                          name:
+                            type: string
+                            example: Riad
+                      pagination:
+                        $ref: '#/components/schemas/pagination'
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            format: url
+                            example: /comments/1
+                          article:
+                            type: string
+                            format: url
+                            example: /article/1
+                          author:
+                            type: string
+                            format: url
+                            example: /author/1
+                          next-page:
+                            type: string
+                            format: url
+                            example: /article/4
+                          prev-page:
+                            type: string
+                            format: url
+                            example: /article/2
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  '/article/author':
+    get:
+      security: 
+        - bearerAuth: []
+      description: get all comments from an array 
+      tags: [Article]
+      parameters:
+        - $ref: '#/components/parameters/pageParams'
+        - $ref: '#/components/parameters/limitParams'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/sortTypeParam'
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema: 
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32 
+                    example: 200
+                  message:
+                    type: string
+                    example: success
+                  authors:
+                    type: array
+                    items:
+                      type: object
+                      properties: 
+                        id:
+                          type: number
+                          format: int32
+                          example: 1
+                        name:
+                          type: string
+                          example: riad
+                      
+                  pagination:
+                    $ref: '#/components/schemas/pagination'
+                  links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            format: url
+                            example: /comments/1
+                          next-page:
+                            type: string
+                            format: url
+                            example: /article/4
+                          prev-page:
+                            type: string
+                            format: url
+                            example: /article/2                    
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'        
+  '/articles/{id}/comment':
+    post: 
+      security: 
+        - bearerAuth: []
+      tags: [Article]
+      description: create a comment in an article
+      parameters: 
+        - $ref: '#/components/parameters/idPathParams'
+      requestBody: 
+        description: input a comment
+        content: 
+          'application/json':
+            schema: 
+              type: object
+              properties: 
+                comment:
+                  type: string
+                  example: this is good 
+              required: [comment]
+      responses: 
+        '200':
+          description: success 
+          content: 
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string 
+                    example: success 
+                  comment:
+                    type: string 
+                    example: good information 
+                  time-stamp:
+                    $ref: '#/components/schemas/timeStamp'
+                  links:
+                    type: object
+                    properties: 
+                      article:
+                        type: string 
+                        format: url 
+                        example: /article/2
+                      author:
+                        type: object
+                        properties: 
+                          id:
+                            type: number
+                            format: int32
+                            example: 1
+                          name: 
+                            type: string
+                            example: riad 
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/articles/{id}/comments/{commentID}':
+    put: 
+      security:
+        - bearerAuth: []
+      tags: [Article]
+      description: update an comment from an article 
+      parameters: 
+        - $ref: '#/components/parameters/idPathParams'
+        - $ref: '#/components/parameters/idPathParams'
+      requestBody: 
+        description: input a comment
+        content: 
+          'application/json':
+            schema: 
+              type: object
+              properties: 
+                comment:
+                  type: string
+                  example: this is good 
+              required: [comment]
+      responses: 
+        '200':
+          description: success 
+          content: 
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32
+                    example: 200
+                  message:
+                    type: string 
+                    example: success 
+                  comment:
+                    type: string 
+                    example: good information 
+                  time-stamp:
+                    $ref: '#/components/schemas/timeStamp'
+                  links:
+                    type: object
+                    properties: 
+                      article:
+                        type: string 
+                        format: url 
+                        example: /article/2
+                      author:
+                        type: object
+                        properties: 
+                          id:
+                            type: number
+                            format: int32
+                            example: 1
+                          name: 
+                            type: string
+                            example: riad 
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/articles/{id}/comments/{id}':
+    delete: 
+      security:
+        - bearerAuth: []
+      tags: [Article]
+      description: update an comment from an article 
+      parameters: 
+        - $ref: '#/components/parameters/idPathParams'
+        - $ref: '#/components/parameters/idPathParams'
+      
+      responses: 
+        '204':
+          description: success 
+          content: 
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code: 
+                    type: number
+                    format: int32
+                    example: 204
+                  message:
+                    type: string 
+                    example: success 
+                  links:
+                    type: object
+                    properties: 
+                      article:
+                        type: string 
+                        format: url 
+                        example: /article/2
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+
+components: 
+  securitySchemes: 
+    bearerAuth:
+      type: http 
+      scheme: bearer 
+      bearerFormat: JWT  
+  schemas: 
+    article:
+      allOf: 
+        - type: object
+          properties: 
+            title:
+              type: string
+              example: first Article
+            body:
+              type: string
+              format: text
+              example: article body 
+            coverImage:
+              type: string
+              format: url
+              example: 'https://cloudinary.com/15362adged265'
+            status:
+              type: string
+              enum: [draft, Published]
+              example: draft
+          required: [title, body] 
+        - $ref: '#/components/schemas/timeStamp'
+    timeStamp:
+      type: object
+      properties: 
+        createAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [createAt, updatedAt]
+    authorDTO:
+      type: object
+      properties: 
+        id:
+          type: string
+          example: fs25sd6325
+        name:
+          type: string
+          example: this is articles 
+      required: [id, name]
+    comments:
+      allOf: 
+        - type: object
+          properties: 
+            id:
+              type: number
+              format: int32
+              example: 1
+            body:
+              type: string
+              example: 'this is chittagong blog post body'
+            author:
+              type: string
+              format: url
+              example: '/article/author/2'
+            article:
+              type: string
+              format: url
+              example: '/article/1'
+            status:
+              type: string
+              enum: [public, privet]
+              example: public 
+            time-stamp:
+              $ref: '#/components/schemas/timeStamp'
+          required: [id, body, author, article, status]
+    'user-data':
+      allOf: 
+        - type: object
+          properties: 
+            name:
+              type: string
+              example: riad 
+            email: 
+              type: string
+              format: email
+              example: riad@gmail.com
+            mobile:
+              type: number
+              format: int32
+              example: 01518949131
+            password:
+              type: string
+              format: password
+              example: riad123 
+            roll:
+              type: string
+              enum: [user, admin]
+              example: User 
+            status:
+              type: string
+              enum: [draft, published]
+              example: Draft
+        - $ref: '#/components/schemas/timeStamp'
+    pagination:
+      type: object
+      properties: 
+        page:
+          type: number
+          format: int32
+          example: 1
+        limit:
+          type: number
+          format: int32
+          example: 10
+        next:
+          type: string
+          example: '/article/2'
+        prev:
+          type: string
+          example: '/article/1'
+        totalPage:
+          type: number
+          format: int32
+          example: 20
+        total_items:
+          type: number
+          format: int32
+          example: 50
+  responses:            
+    '400':
+      description: 'Bad Request'
+      content: 
+        'application/json':
+          schema: 
+            type: object
+            properties: 
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad request
+              data:
+                type: array
+                items: 
+                  type: object
+                  properties: 
+                    field:
+                      type: string
+                      example: field name
+                    message:
+                      type: string
+                      example: Invalid this...
+                    in:
+                      type: string
+                      enum: [ query, body ]
+                      example: body 
+    '401':
+      description: Unauthorized
+      content: 
+        'application/json':
+          schema:
+            type: object
+            properties: 
+              code:
+                type: number
+                example: 401
+              message:
+                type: string
+                example: Unauthorized
+    '404':
+      description: not found
+      content: 
+        'application/json':
+          schema:
+            type: object
+            properties: 
+              code:
+                type: number
+                example: 404
+              message:
+                type: string
+                example: not found
+    '500':
+      description: server error 
+      content:
+        'application/json':
+          schema: 
+            type: object
+            properties:
+              code: 
+                type: number
+                example: 500
+              message:
+                type: string
+                example: server error                       
+  parameters: 
+    idPathParams:
+      in: path
+      name: id 
+      description: article id 
+      required: true
+      schema: 
+        type: number
+        format: int32
+        example: 1
+    pageParams:
+      in: query
+      name: page
+      description: current page number
+      schema: 
+        type: integer
+        format: int32
+        example: 1  
+    limitParams:
+      in: query
+      name: limit
+      description: the number of content will be return
+      schema:
+        type: integer
+        format: int32
+        example: 2
+    sortTypeParam:
+      in: query
+      name: sort_type
+      description: sort by asc or des 
+      schema: 
+        type: string
+        enum: [asc, dec]
+        example: asc 
+    sortByParam:
+      in: query
+      name: sort_by_date
+      description: the sort property will use to sort, it could be either updateAt or title
+      schema: 
+        type: string 
+        example: updatedAt
+    searchParam:
+      in: query
+      name: search 
+      description: the search term to filter articles base on the title 
+      schema:
+        type: string
+        example: about chittagong
