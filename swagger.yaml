@@ -190,7 +190,6 @@ paths:
           $ref: '#/components/responses/400'
         '500':
           $ref: '#/components/responses/500'
-
     patch: 
       security: 
         - bearerAuth: []
@@ -903,7 +902,7 @@ paths:
       security: 
         - bearerAuth: []
       description: get all comments from an article 
-      tags: [Article]
+      tags: [Comments]
       parameters:
         - $ref: '#/components/parameters/idPathParams'
         - $ref: '#/components/parameters/pageParams'
@@ -978,7 +977,7 @@ paths:
     get:
       security: 
         - bearerAuth: []
-      description: get all comments from an array 
+      description: get all Author 
       tags: [Article]
       parameters:
         - $ref: '#/components/parameters/pageParams'
@@ -1038,7 +1037,7 @@ paths:
     post: 
       security: 
         - bearerAuth: []
-      tags: [Article]
+      tags: [Comments]
       description: create a comment in an article
       parameters: 
         - $ref: '#/components/parameters/idPathParams'
@@ -1102,7 +1101,7 @@ paths:
     put: 
       security:
         - bearerAuth: []
-      tags: [Article]
+      tags: [Comments]
       description: update an comment from an article 
       parameters: 
         - $ref: '#/components/parameters/idPathParams'
@@ -1167,7 +1166,7 @@ paths:
     delete: 
       security:
         - bearerAuth: []
-      tags: [Article]
+      tags: [Comments]
       description: update an comment from an article 
       parameters: 
         - $ref: '#/components/parameters/idPathParams'

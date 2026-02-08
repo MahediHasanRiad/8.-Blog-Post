@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
 
 const signInSchema = new Schema(
@@ -22,6 +21,6 @@ const signInSchema = new Schema(
   { timestamps: true },
 );
 
-const SignIn = new signInSchema('SignIn', signInSchema)
+const SignIn = model('SignIn', signInSchema)
 
 module.exports = SignIn
