@@ -3,6 +3,8 @@ import swaggerUI from "swagger-ui-express";
 import Yaml from "yamljs";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import { userRouter } from "./src/routers/user.router.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config({ path: "./.env" });
 
@@ -12,9 +14,11 @@ const swaggerDocs = Yaml.load("./swagger.yaml");
 // middleware
 app.use(express.json());
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs)); // setup and configure yaml file
-
+app.use(cookieParser())
 
 // routers
+app.use('/api/v1/user', userRouter)
+
 app.get("/health", (req, res) => {
   res.send("this is health");
 });
@@ -29,7 +33,7 @@ mongoose
   .then(() => {
     console.log("Database connected");
 
-    app.listen(3000, () => {
+    app.listen(3001, () => {
       console.log("server on...");
     });
   })
