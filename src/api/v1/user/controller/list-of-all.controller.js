@@ -12,13 +12,17 @@ const allUserController = asyncHandler(async (req, res) => {
    * res
    */
 
-  const {
+  let {
     page = 1,
     limit = 10,
     sortType = "asc",
     sortBy = "updatedAt",
     search = "",
   } = req.query;
+
+  page = Number(page)
+  limit = Number(limit)
+  sortBy = Number(sortBy)
 
   // all users
   const sort = `${sortType === "dec" ? "-" : ""}${sortBy}`;
