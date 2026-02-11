@@ -12,14 +12,14 @@ import { allUserController } from "../api/v1/user/controller/list-of-all.control
 
 const userRouter = Router();
 
-userRouter.route("/register").post(registerController);
-userRouter.route("/login").get(logInController);
-userRouter.route("/changePassword").post(jwtVerify, changePassword);
-userRouter.route("/:id").get(jwtVerify, findUserController);
-userRouter.route("/:id").put(jwtVerify, updateOrCreateUserController);
-userRouter.route("/update").patch(jwtVerify, updateUserController);
-userRouter.route("/:id").delete(jwtVerify, deleteUserController);
-userRouter.route("/logout").get(jwtVerify, logOutController);
-userRouter.route("/all").get(jwtVerify, allUserController);
+userRouter.post("/register", registerController);
+userRouter.get("/login", logInController);
+userRouter.post("/changePassword", jwtVerify, changePassword);
+userRouter.get("/all", jwtVerify, allUserController)
+userRouter.get("/logout", jwtVerify, logOutController)
+userRouter.patch("/update", jwtVerify, updateUserController);
+userRouter.get("/:id", jwtVerify, findUserController)
+userRouter.put("/:id", jwtVerify, updateOrCreateUserController);
+userRouter.delete("/:id", jwtVerify, deleteUserController);
 
 export { userRouter };
