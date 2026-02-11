@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./src/routers/user.router.js";
 import { articleRouter } from "./src/routers/article.router.js";
+import { commentRouter } from "./src/routers/comment.router.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -18,13 +19,15 @@ app.use(urlencoded({extended: true}))
 app.use(cookieParser());
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs)); // setup and configure yaml file
 
+
 // routers
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/article", articleRouter);
-
+app.use('/api/v1/article', commentRouter)
 app.get("/health", (req, res) => {
   res.send("this is health");
 });
+
 
 // connect database
 const PASSWORD = process.env.DB_USER_PASSWORD;
