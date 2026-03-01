@@ -23,7 +23,7 @@ export const registerController = asyncHandler( async (req, res) => {
   const avatarLocalFilePath = req.files?.avatar?.[0].path
   const coverImageLocalFilePath = req.files?.coverImage?.[0].path
   if(!avatarLocalFilePath) throw new apiError('avatar file path not found')
-console.log(avatarLocalFilePath)
+
   const avatar = await cloudinaryFileUpload(avatarLocalFilePath)
   const coverImage = coverImageLocalFilePath ? await cloudinaryFileUpload(coverImageLocalFilePath) : ''
 

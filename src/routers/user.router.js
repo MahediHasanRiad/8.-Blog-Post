@@ -25,7 +25,15 @@ userRouter.post("/login", logInController);
 userRouter.post("/changePassword", jwtVerify, changePassword);
 userRouter.get("/all", jwtVerify, allUserController);
 userRouter.get("/logout", jwtVerify, logOutController);
-userRouter.patch("/update", jwtVerify, updateUserController);
+userRouter.patch(
+  "/update",
+  jwtVerify,
+  upload.fields([
+    { name: "avatar", maxCount: 1 },
+    { name: "coverImage", maxCount: 1 },
+  ]),
+  updateUserController,
+);
 userRouter.get("/:id", jwtVerify, findUserController);
 userRouter.put("/:id", jwtVerify, updateOrCreateUserController);
 userRouter.delete("/:id", jwtVerify, deleteUserController);
