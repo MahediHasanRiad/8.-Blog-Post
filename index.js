@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { userRouter } from "./src/routers/user.router.js";
 import { articleRouter } from "./src/routers/article.router.js";
 import { commentRouter } from "./src/routers/comment.router.js";
+import cors from 'cors'
 
 dotenv.config({ path: "./.env" });
 
@@ -14,6 +15,7 @@ const app = express();
 const swaggerDocs = Yaml.load("./swagger.yaml");
 
 // middleware
+app.use(cors())
 app.use(express.json());
 app.use(urlencoded({extended: true}))
 app.use(cookieParser());

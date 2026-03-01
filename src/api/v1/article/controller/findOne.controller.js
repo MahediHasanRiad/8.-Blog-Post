@@ -3,24 +3,36 @@ import { apiResponse } from "../../../../utils/apiResponse.js";
 import { apiError } from "../../../../utils/apiError.js";
 import { Article } from "../../../../models/article.model.js";
 import { Comment } from "../../../../models/comment.mode.js";
+import mongoose from "mongoose";
 
 const findOneController = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const article = await Article.findById(id).populate("author", "_id name");
 
-  if(!article){
-    throw new apiError(404, 'article not found !!!')
+  if (!article) {
+    throw new apiError(404, "article not found !!!");
   }
-  const comments = await Comment.find(article._id)
+  const comments = await Comment.aggregate([
+    {
+      $match: {
+        articleID: new mongoose.Types.ObjectId(id),
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+  ]);
 
   // links
   const links = {
     self: `/api/v1/article${req.path}`,
-    author: article.author
-  }
+    author: article.author,
+  };
 
-  res.status(200).json(new apiResponse(200, {article, comments, links}))
+  res.status(200).json(new apiResponse(200, { article, comments, links }));
 });
 
 export { findOneController };

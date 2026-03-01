@@ -12,7 +12,7 @@ const articleRouter = Router()
 
 
 articleRouter.post('/', jwtVerify, upload.single('coverImage'), createArticleController )
-articleRouter.get('/all', jwtVerify, listOfAllArticleController)
+articleRouter.get('/all',  listOfAllArticleController)
 articleRouter.get('/:id', jwtVerify, findOneController)
 articleRouter.patch('/:id', jwtVerify, updateArticleController)
 articleRouter.post('/:id', jwtVerify, upload.single('coverImage'), updateCoverImageController)

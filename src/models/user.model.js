@@ -20,8 +20,6 @@ const userSchema = new Schema({
     },
     mobile: {
         type: Number,
-        // max: [16, 'Too Long'],
-        // min: [10, 'Not Valid'],
         required: [true, 'Mobile number required !!!'],
         validate:{
             validator: function(v){
@@ -35,11 +33,17 @@ const userSchema = new Schema({
         minLength: [6, 'Minimum 6 character'],
         required: [true, 'Password Required !!!']
     },
+    avatar: {
+        type: String,
+        required: true
+    }, 
+    coverImage: {
+        type: String
+    },
     role: {
         type: String,
         enum: ['USER', 'ADMIN'],
         default: 'USER',
-        required: true
     },
     status: {
         type: String,
@@ -55,7 +59,7 @@ userSchema.pre("save", async function(next) {
         if(!this.isModified("password")) return
 
         this.password = await bcrypt.hash(this.password, 10)
-        return next()
+        return 
     } catch (error) {
         console.log(error)
     }

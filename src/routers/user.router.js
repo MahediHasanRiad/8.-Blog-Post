@@ -9,16 +9,24 @@ import { updateUserController } from "../api/v1/user/controller/update.controlle
 import { deleteUserController } from "../api/v1/user/controller/delete.controller.js";
 import { logOutController } from "../api/v1/user/controller/log-out.controller.js";
 import { allUserController } from "../api/v1/user/controller/list-of-all.controller.js";
+import { upload } from "../middleware/multer.middleware.js";
 
 const userRouter = Router();
 
-userRouter.post("/register", registerController);
-userRouter.get("/login", logInController);
+userRouter.post(
+  "/register",
+  upload.fields([
+    { name: "avatar", maxCount: 1 },
+    { name: "coverImage", maxCount: 1 },
+  ]),
+  registerController,
+);
+userRouter.post("/login", logInController);
 userRouter.post("/changePassword", jwtVerify, changePassword);
-userRouter.get("/all", jwtVerify, allUserController)
-userRouter.get("/logout", jwtVerify, logOutController)
+userRouter.get("/all", jwtVerify, allUserController);
+userRouter.get("/logout", jwtVerify, logOutController);
 userRouter.patch("/update", jwtVerify, updateUserController);
-userRouter.get("/:id", jwtVerify, findUserController)
+userRouter.get("/:id", jwtVerify, findUserController);
 userRouter.put("/:id", jwtVerify, updateOrCreateUserController);
 userRouter.delete("/:id", jwtVerify, deleteUserController);
 

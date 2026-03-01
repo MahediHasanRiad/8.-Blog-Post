@@ -45,6 +45,7 @@ const createArticleController = async (req, res) => {
     
         res.status(201).json(new apiResponse(200, {article, links}))
     } catch (error) {
+        console.log(error)
         throw new apiError(400, error)
     }
 
