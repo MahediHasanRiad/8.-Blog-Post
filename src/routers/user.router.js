@@ -10,6 +10,7 @@ import { deleteUserController } from "../api/v1/user/controller/delete.controlle
 import { logOutController } from "../api/v1/user/controller/log-out.controller.js";
 import { allUserController } from "../api/v1/user/controller/list-of-all.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
+import { myProfileController } from "../api/v1/user/controller/my-profile.controller.js";
 
 const userRouter = Router();
 
@@ -22,6 +23,7 @@ userRouter.post(
   registerController,
 );
 userRouter.post("/login", logInController);
+userRouter.get("/me", jwtVerify, myProfileController);
 userRouter.post("/changePassword", jwtVerify, changePassword);
 userRouter.get("/all", jwtVerify, allUserController);
 userRouter.get("/logout", jwtVerify, logOutController);
